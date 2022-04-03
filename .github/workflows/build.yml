@@ -1,0 +1,28 @@
+name: "build"
+
+on: ["push", "pull_request"]
+
+env:
+  JDK_VERSION: 17
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.event.number || github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: "${{ github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name }}"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "checkout repository"
+        uses: "actions/checkout@v3"
+      - name: "setup JDK ${{ env.JDK_VERSION }}"
+        uses: "actions/setup-java@v3"
+        with:
+          distribution: "temurin"
+          java-version: "${{ env.JDK_VERSION }}"
+      - name: "run gradle build"
+        uses: "gradle/gradle-build-action@v2"
+        with:
+          cache-read-only: "${{ !startsWith(github.ref, 'refs/heads/main/') || github.event_name == 'pull_request' }}"
+          arguments: "build"
