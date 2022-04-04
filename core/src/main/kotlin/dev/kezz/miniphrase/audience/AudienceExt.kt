@@ -71,7 +71,7 @@ public fun Audience.sendTranslated(
 
     else -> {
       // Try and get the locale from the audience, otherwise default, then translate and send!
-      val targetLocale = get(Identity.LOCALE).orElseGet(miniPhrase::defaultLocale)
+      val targetLocale = locale ?: get(Identity.LOCALE).orElseGet(miniPhrase::defaultLocale)
       sendMessage(identity, miniPhrase.translate(key, targetLocale, tags), type)
     }
   }
