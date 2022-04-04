@@ -24,7 +24,7 @@ jobs:
       - name: "run gradle build"
         uses: "gradle/gradle-build-action@v2"
         with:
-          cache-read-only: "${{ !startsWith(github.ref, 'refs/heads/main/') || github.event_name == 'pull_request' }}"
+          cache-read-only: "${{ github.ref != 'refs/heads/main' || github.event_name == 'pull_request' }}"
           arguments: "build"
       - name: "archive test results"
         if: "${{ always() }}"
@@ -43,7 +43,7 @@ jobs:
             echo "STATUS=release" >> $GITHUB_ENV
           fi
       - name: "publish"
-        if: "${{ runner.os == 'Linux' && env.STATUS != 'release' && github.event_name == 'push' && startsWith(github.ref, 'refs/heads/main/') }}"
+        if: "${{ runner.os == 'Linux' && env.STATUS != 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}"
         run: "./gradlew publish"
         env:
           ORG_GRADLE_PROJECT_sonatypeUsername: "${{ secrets.SONATYPE_USERNAME }}"
