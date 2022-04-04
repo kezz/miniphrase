@@ -1,6 +1,10 @@
 name: "build"
 
-on: ["push", "pull_request"]
+on:
+  push:
+    branches: "**"
+    tags-ignore: ["**"]
+  pull_request:
 
 env:
   JDK_VERSION: 17
