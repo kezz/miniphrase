@@ -23,7 +23,7 @@
  */
 package dev.kezz.miniphrase.tag
 
-import dev.kezz.miniphrase.MiniPhaseContext
+import dev.kezz.miniphrase.MiniPhraseContext
 import dev.kezz.miniphrase.MiniPhrase
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.Context
@@ -38,7 +38,7 @@ import java.util.Locale
  */
 public class TagResolverBuilder private constructor(
   override val miniPhrase: MiniPhrase
-) : MiniPhaseContext {
+) : MiniPhraseContext {
 
   public companion object {
     private const val PHRASE_TAG_NAME: String = "phrase"

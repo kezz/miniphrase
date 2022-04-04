@@ -40,7 +40,7 @@ public class MiniPhrase private constructor(
   public val defaultLocale: Locale,
   /** If the phrase tag should be included by default. */
   public val includePhraseTag: Boolean
-) : MiniPhaseContext {
+) : MiniPhraseContext {
 
   public companion object {
     /** Creates a simple MiniPhrase instance from a given translation registry. */

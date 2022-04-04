@@ -23,7 +23,7 @@
  */
 package dev.kezz.miniphrase.audience
 
-import dev.kezz.miniphrase.MiniPhaseContext
+import dev.kezz.miniphrase.MiniPhraseContext
 import dev.kezz.miniphrase.tag.TagResolverBuilder
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.audience.MessageType
@@ -35,7 +35,7 @@ public fun Array<out Audience>.asAudience(): Audience =
   Audience.audience(*this)
 
 /** @see [Audience.sendTranslated]. */
-context(MiniPhaseContext)
+context(MiniPhraseContext)
 public fun Array<out Audience>.sendTranslated(
   key: String,
   type: MessageType = MessageType.CHAT,

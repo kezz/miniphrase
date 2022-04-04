@@ -24,7 +24,7 @@
 package dev.kezz.miniphrase
 
 /** An object with an associated MiniPhrase instance. Used to access many useful extension functions. */
-public interface MiniPhaseContext {
+public interface MiniPhraseContext {
   /** The MiniPhrase instance associated with this object. */
   public val miniPhrase: MiniPhrase
 }

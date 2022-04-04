@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "description": "Renovate configuration for MiniPhase",
+  "description": "Renovate configuration for MiniPhrase",
   "extends": [
     "config:base"
   ],

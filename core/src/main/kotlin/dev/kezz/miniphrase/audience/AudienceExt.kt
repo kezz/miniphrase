@@ -23,7 +23,7 @@
  */
 package dev.kezz.miniphrase.audience
 
-import dev.kezz.miniphrase.MiniPhaseContext
+import dev.kezz.miniphrase.MiniPhraseContext
 import dev.kezz.miniphrase.tag.TagResolverBuilder
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.audience.ForwardingAudience
@@ -37,14 +37,14 @@ import java.util.Locale
  * The message will be translated using the provided [locale]. If this locale is null,
  * it will instead be translated using the locale provided from the pointers of the
  * audience. If this is not available, or they do not have a locale, the default locale
- * for the MiniPhase instance in use will be used.
+ * for the MiniPhrase instance in use will be used.
  *
  * This method will account for any forwarding audiences, automatically calling this
  * method again on their children, skipping the parent audience. If the locale that is
  * provided is not null, then this will be skipped as the resulting component is fixed
  * for all recipients of the message.
  */
-context(MiniPhaseContext)
+context(MiniPhraseContext)
 public fun Audience.sendTranslated(
   /** The key of the message. */
   key: String,
