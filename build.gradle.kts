@@ -8,11 +8,15 @@ import org.jlleitschuh.gradle.ktlint.KtlintIdeaPlugin
 
 @Suppress("DSL_SCOPE_VIOLATION") // https://youtrack.jetbrains.com/issue/KTIJ-19369
 plugins {
-  alias(libs.plugins.indra) apply false
-  alias(libs.plugins.indra.license) apply false
+  alias(libs.plugins.indra)
+  alias(libs.plugins.indra.license)
   alias(libs.plugins.indra.sonatype)
-  alias(libs.plugins.kotlin.jvm) apply false
-  alias(libs.plugins.ktlint) apply false
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.ktlint)
+}
+
+tasks.withType<AbstractPublishToMaven>() {
+  onlyIf { false }
 }
 
 indraSonatype {
