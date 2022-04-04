@@ -15,6 +15,10 @@ plugins {
   alias(libs.plugins.ktlint)
 }
 
+indraSonatype {
+  useAlternateSonatypeOSSHost("s01")
+}
+
 subprojects {
   apply<IndraPlugin>()
   apply<IndraLicenseHeaderPlugin>()
