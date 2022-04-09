@@ -27,6 +27,5 @@ import java.util.Locale
 
 /** An empty translation registry. */
 public object EmptyTranslationRegistry : TranslationRegistry {
-  override suspend fun reload() { }
   override fun get(key: String, locale: Locale): String? = null
 }

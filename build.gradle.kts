@@ -15,7 +15,7 @@ plugins {
   alias(libs.plugins.ktlint)
 }
 
-tasks.withType<AbstractPublishToMaven>() {
+tasks.withType<AbstractPublishToMaven> {
   onlyIf { false }
 }
 
@@ -75,7 +75,7 @@ subprojects {
       version.set("0.45.1")
     }
 
-    withType<KotlinCompile>() {
+    withType<KotlinCompile> {
       kotlinOptions {
         freeCompilerArgs = freeCompilerArgs + "-Xcontext-receivers"
       }

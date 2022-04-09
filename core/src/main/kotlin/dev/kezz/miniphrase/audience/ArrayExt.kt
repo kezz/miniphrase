@@ -24,11 +24,13 @@
 package dev.kezz.miniphrase.audience
 
 import dev.kezz.miniphrase.MiniPhraseContext
-import dev.kezz.miniphrase.tag.TagResolverBuilder
+import dev.kezz.miniphrase.tag.ContextualTagBuilder
+import dev.kezz.miniphrase.tag.GenericTagBuilder
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.audience.MessageType
 import net.kyori.adventure.identity.Identity
 import java.util.Locale
+import kotlin.reflect.KClass
 
 /** Shorthand for [Audience.audience]. */
 public fun Array<out Audience>.asAudience(): Audience =
@@ -41,13 +43,38 @@ public fun Array<out Audience>.sendTranslated(
   type: MessageType = MessageType.CHAT,
   identity: Identity = Identity.nil(),
   locale: Locale? = null,
-  tags: (TagResolverBuilder.() -> Unit)? = null
+  tags: GenericTagBuilder? = null
 ) {
   if (locale != null) {
     // If we've got an override locale, we can save rendering by wrapping this in an audience.
     asAudience().sendTranslated(key, type, identity, locale, tags)
   } else {
     // Otherwise, we need to pull it from each audience member, so just delegate.
-    forEach { audience -> audience.sendTranslated(key, type, identity, locale, tags) }
+    forEach { audience -> audience.sendTranslated(key, type, identity, null, tags) }
   }
+}
+
+/** @see [Audience.sendTranslatedContextual] */
+context(MiniPhraseContext)
+public inline fun <reified T : Audience> Array<Audience>.sendTranslatedContextual(
+  key: String,
+  type: MessageType = MessageType.CHAT,
+  identity: Identity = Identity.nil(),
+  locale: Locale? = null,
+  noinline tags: ContextualTagBuilder<T>
+) {
+  forEach { audience -> audience.sendTranslatedContextual(T::class, key, type, identity, locale, tags) }
+}
+
+/** @see [Audience.sendTranslatedContextual]. */
+context(MiniPhraseContext)
+public fun <T : Audience> Array<out Audience>.sendTranslatedContextual(
+  audienceType: KClass<T>,
+  key: String,
+  type: MessageType = MessageType.CHAT,
+  identity: Identity = Identity.nil(),
+  locale: Locale? = null,
+  tags: ContextualTagBuilder<T>
+) {
+  forEach { audience -> audience.sendTranslatedContextual(audienceType, key, type, identity, locale, tags) }
 }

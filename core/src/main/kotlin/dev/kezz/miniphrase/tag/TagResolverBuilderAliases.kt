@@ -21,21 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dev.kezz.miniphrase.i18n
+package dev.kezz.miniphrase.tag
 
-import java.util.Locale
+/** A builder operating on a MiniPhrase tags instance. */
+public typealias GenericTagBuilder = MiniPhraseTags.() -> Unit
 
-/** A translation registry that is backed by a map populated by a supplier. */
-public class MapBasedTranslationRegistry(
-  /** The supplier of content for the map, used in reloads. */
-  private val supplier: suspend () -> Map<Locale, Map<String, String>>
-) : TranslationRegistry {
-  private var map: Map<Locale, Map<String, String>> = mapOf()
-
-  override suspend fun reload() {
-    map = supplier()
-  }
-
-  override fun get(key: String, locale: Locale): String? =
-    map[locale]?.get(key)
-}
+/** A builder operating on a MiniPhrase tags instance, with additional context. */
+public typealias ContextualTagBuilder<T> = MiniPhraseTags.(T) -> Unit

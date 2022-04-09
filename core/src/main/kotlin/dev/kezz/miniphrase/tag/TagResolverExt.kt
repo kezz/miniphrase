@@ -21,12 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dev.kezz.miniphrase.i18n
+package dev.kezz.miniphrase.tag
 
-import java.util.Locale
+import net.kyori.adventure.audience.Audience
 
-/** A registry of translations. */
-public fun interface TranslationRegistry {
-  /** Returns a translation for a given [key] in a [locale]. */
-  public operator fun get(key: String, locale: Locale): String?
-}
+/**
+ * Converts this contextual tag resolver builder into a non-contextual tag resolver
+ * builder, given the provided [context] to resolve.
+ */
+public fun <T : Audience> ContextualTagBuilder<T>.asNonContextual(context: T): GenericTagBuilder =
+  object : (MiniPhraseTags) -> Unit {
+    override fun invoke(p1: MiniPhraseTags) {
+      this@asNonContextual(p1, context)
+    }
+  }

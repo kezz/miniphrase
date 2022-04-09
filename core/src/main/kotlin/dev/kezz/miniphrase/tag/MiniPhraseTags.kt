@@ -23,8 +23,8 @@
  */
 package dev.kezz.miniphrase.tag
 
-import dev.kezz.miniphrase.MiniPhraseContext
 import dev.kezz.miniphrase.MiniPhrase
+import dev.kezz.miniphrase.MiniPhraseContext
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.Context
 import net.kyori.adventure.text.minimessage.tag.Tag
@@ -36,16 +36,21 @@ import java.util.Locale
  * A wrapper around [TagResolver.Builder] with useful defaults, utility methods and
  * helper functions for MiniPhrase-specific elements.
  */
-public class TagResolverBuilder private constructor(
+public class MiniPhraseTags private constructor(
   override val miniPhrase: MiniPhrase
 ) : MiniPhraseContext {
 
   public companion object {
     private const val PHRASE_TAG_NAME: String = "phrase"
 
-    /** Configures and builds a tag resolver using the provided builder and MiniPhrase instance. */
-    public fun configureAndBuild(miniPhrase: MiniPhrase, builder: TagResolverBuilder.() -> Unit): TagResolver =
-      TagResolverBuilder(miniPhrase).apply(builder).build()
+    /** Builds a tag resolver using the builder and associated MiniPhrase instance. */
+    context(MiniPhraseContext)
+    public fun build(builder: MiniPhraseTags.() -> Unit): TagResolver =
+      build(miniPhrase, builder)
+
+    /** Builds a tag resolver using the builder and MiniPhrase instance. */
+    public fun build(miniPhrase: MiniPhrase, builder: MiniPhraseTags.() -> Unit): TagResolver =
+      MiniPhraseTags(miniPhrase).apply(builder).build()
   }
 
   private val builder: TagResolver.Builder = TagResolver.builder()
@@ -130,7 +135,7 @@ public class TagResolverBuilder private constructor(
     }
   }
 
-  /** Creates a tag resolver from this builder. */
+  /** Creates a standard tag resolver from this tag instance. */
   public fun build(): TagResolver =
     builder.build()
 }

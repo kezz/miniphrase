@@ -25,9 +25,11 @@ package dev.kezz.miniphrase
 
 import dev.kezz.miniphrase.i18n.EmptyTranslationRegistry
 import dev.kezz.miniphrase.i18n.TranslationRegistry
-import dev.kezz.miniphrase.tag.TagResolverBuilder
+import dev.kezz.miniphrase.tag.GenericTagBuilder
+import dev.kezz.miniphrase.tag.MiniPhraseTags
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import java.util.Locale
 
 /** The main entry-point for the MiniPhrase library. */
@@ -56,13 +58,52 @@ public class MiniPhrase private constructor(
   override val miniPhrase: MiniPhrase = this
 
   /** Translates a key with a given locale, or the default locale. */
-  public fun translate(key: String, locale: Locale? = null, tags: (TagResolverBuilder.() -> Unit)? = null): Component {
+  public fun translate(
+    /** The translation key. */
+    key: String,
+    /** The desired locale, or `null` to use the [defaultLocale]. */
+    locale: Locale? = null,
+    /** An additional tag resolver to use. */
+    tags: TagResolver
+  ): Component {
     val targetLocale = locale ?: defaultLocale
-    val translationString = translationRegistry[key, targetLocale] ?: key
-    val resolver = TagResolverBuilder.configureAndBuild(this) {
-      if (includePhraseTag) withPhraseTag(locale)
-      if (tags != null) tags()
-    }
+    val translationString = translationRegistry[key, targetLocale]
+      ?: return Component.text(key) // If no translation was found, just return the key.
+    val resolver =
+      if (includePhraseTag) {
+        MiniPhraseTags.build {
+          withPhraseTag(targetLocale)
+          resolver(tags)
+        }
+      } else {
+        tags
+      }
+
+    return miniMessage.deserialize(translationString, resolver)
+  }
+
+  /** Translates a key with a given locale, or the default locale. */
+  public fun translate(
+    /** The translation key. */
+    key: String,
+    /** The desired locale, or `null` to use the [defaultLocale]. */
+    locale: Locale? = null,
+    /** A tag resolver builder to use, if any. */
+    tags: GenericTagBuilder? = null
+  ): Component {
+    val targetLocale = locale ?: defaultLocale
+    val translationString = translationRegistry[key, targetLocale]
+      ?: return Component.text(key) // If no translation was found, just return the key.
+    val resolver =
+      if (!includePhraseTag && tags == null) {
+        TagResolver.empty()
+      } else {
+        MiniPhraseTags.build {
+          if (includePhraseTag) withPhraseTag(locale)
+          if (tags != null) tags()
+        }
+      }
+
     return miniMessage.deserialize(translationString, resolver)
   }
 
@@ -71,7 +112,7 @@ public class MiniPhrase private constructor(
     private var miniMessage: MiniMessage = MiniMessage.miniMessage()
     private var translationRegistry: TranslationRegistry = EmptyTranslationRegistry
     private var defaultLocale: Locale = Locale.getDefault()
-    private var includePhraseTag: Boolean = true
+    private var includePhraseTag: Boolean = false
 
     /** Sets the MiniMessage instance to use from an instance created by the provided builder. */
     public fun miniMessage(miniMessageBuilder: MiniMessage.Builder.() -> Unit): Builder {
