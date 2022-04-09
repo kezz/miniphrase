@@ -1,18 +1,20 @@
-import net.kyori.indra.IndraLicenseHeaderPlugin
+import com.diffplug.gradle.spotless.SpotlessPlugin
+import com.diffplug.spotless.kotlin.KotlinConstants
 import net.kyori.indra.IndraPlugin
 import net.kyori.indra.IndraPublishingPlugin
-import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jlleitschuh.gradle.ktlint.KtlintBasePlugin
-import org.jlleitschuh.gradle.ktlint.KtlintIdeaPlugin
 
 @Suppress("DSL_SCOPE_VIOLATION") // https://youtrack.jetbrains.com/issue/KTIJ-19369
 plugins {
+  java
   alias(libs.plugins.indra)
-  alias(libs.plugins.indra.license)
   alias(libs.plugins.indra.sonatype)
-  alias(libs.plugins.kotlin.jvm)
-  alias(libs.plugins.ktlint)
+  alias(libs.plugins.spotless)
+}
+
+java {
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(17))
+  }
 }
 
 tasks.withType<AbstractPublishToMaven> {
@@ -25,18 +27,11 @@ indraSonatype {
 
 subprojects {
   apply<IndraPlugin>()
-  apply<IndraLicenseHeaderPlugin>()
   apply<IndraPublishingPlugin>()
-  apply<KotlinPluginWrapper>()
-  apply<KtlintBasePlugin>()
-  apply<KtlintIdeaPlugin>()
+  apply<SpotlessPlugin>()
 
   repositories {
     mavenCentral()
-  }
-
-  dependencies {
-    compileOnly(rootProject.project.libs.kotlin.stdlib)
   }
 
   tasks {
@@ -61,23 +56,23 @@ subprojects {
       }
     }
 
-    java {
-      toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+    spotless {
+      // Custom header format that touches source files, enforcing a header update if the
+      // file has changed when compared to upstream (i.e. only updating the copyright
+      // year when the file has been updated).
+      format("header") {
+        target("**\\/*.java", "**\\/*.kt")
+        ratchetFrom("origin/main")
+
+        // Kotlin's license header delimiter matches Javas, essentially.
+        licenseHeaderFile(
+          rootProject.file("license_header.txt"),
+          KotlinConstants.LICENSE_HEADER_DELIMITER
+        )
       }
-    }
 
-    kotlin {
-      explicitApi()
-    }
-
-    ktlint {
-      version.set("0.45.1")
-    }
-
-    withType<KotlinCompile> {
-      kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + "-Xcontext-receivers"
+      java {
+        googleJavaFormat("1.15.0")
       }
     }
   }

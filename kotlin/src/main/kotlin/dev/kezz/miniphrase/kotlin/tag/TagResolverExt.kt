@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dev.kezz.miniphrase.tag
+package dev.kezz.miniphrase.kotlin.tag
 
 import net.kyori.adventure.audience.Audience
 

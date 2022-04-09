@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dev.kezz.miniphrase.tag
+package dev.kezz.miniphrase.kotlin.i18n
 
-/** A builder operating on a MiniPhrase tags instance. */
-public typealias GenericTagBuilder = MiniPhraseTags.() -> Unit
+import java.util.Locale
 
-/** A builder operating on a MiniPhrase tags instance, with additional context. */
-public typealias ContextualTagBuilder<T> = MiniPhraseTags.(T) -> Unit
+/** An empty translation registry. */
+public object EmptyTranslationRegistry : TranslationRegistry {
+  override fun get(key: String, locale: Locale): String? = null
+}

@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dev.kezz.miniphrase
+package dev.kezz.miniphrase.kotlin.tag
 
-/** An object with an associated MiniPhrase instance. Used to access many useful extension functions. */
-public interface MiniPhraseContext {
-  /** The MiniPhrase instance associated with this object. */
-  public val miniPhrase: MiniPhrase
-}
+/** A builder operating on a MiniPhrase tags instance. */
+public typealias GenericTagBuilder = MiniPhraseTags.() -> Unit
+
+/** A builder operating on a MiniPhrase tags instance, with additional context. */
+public typealias ContextualTagBuilder<T> = MiniPhraseTags.(T) -> Unit

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dev.kezz.miniphrase.i18n
+package dev.kezz.miniphrase.kotlin.i18n
 
 import java.util.Locale
 

@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dev.kezz.miniphrase
+package dev.kezz.miniphrase.kotlin
 
-import dev.kezz.miniphrase.i18n.EmptyTranslationRegistry
-import dev.kezz.miniphrase.i18n.TranslationRegistry
-import dev.kezz.miniphrase.tag.GenericTagBuilder
-import dev.kezz.miniphrase.tag.MiniPhraseTags
+import dev.kezz.miniphrase.MiniPhraseContext
+import dev.kezz.miniphrase.kotlin.i18n.EmptyTranslationRegistry
+import dev.kezz.miniphrase.kotlin.i18n.TranslationRegistry
+import dev.kezz.miniphrase.kotlin.tag.GenericTagBuilder
+import dev.kezz.miniphrase.kotlin.tag.MiniPhraseTags
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -55,7 +56,7 @@ public class MiniPhrase private constructor(
   }
 
   /** This MiniPhrase instance. */
-  override val miniPhrase: MiniPhrase = this
+  override fun getMiniPhrase(): MiniPhrase = this
 
   /** Translates a key with a given locale, or the default locale. */
   public fun translate(

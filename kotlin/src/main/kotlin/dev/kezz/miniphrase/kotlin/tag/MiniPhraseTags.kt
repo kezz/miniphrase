@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dev.kezz.miniphrase.tag
+package dev.kezz.miniphrase.kotlin.tag
 
-import dev.kezz.miniphrase.MiniPhrase
-import dev.kezz.miniphrase.MiniPhraseContext
+import dev.kezz.miniphrase.kotlin.MiniPhrase
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.Context
 import net.kyori.adventure.text.minimessage.tag.Tag

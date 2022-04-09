@@ -21,12 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dev.kezz.miniphrase.audience
+package dev.kezz.miniphrase.kotlin.audience
 
-import dev.kezz.miniphrase.MiniPhraseContext
-import dev.kezz.miniphrase.tag.ContextualTagBuilder
-import dev.kezz.miniphrase.tag.GenericTagBuilder
-import dev.kezz.miniphrase.tag.asNonContextual
+import dev.kezz.miniphrase.kotlin.tag.ContextualTagBuilder
+import dev.kezz.miniphrase.kotlin.tag.GenericTagBuilder
+import dev.kezz.miniphrase.kotlin.tag.asNonContextual
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.audience.ForwardingAudience
 import net.kyori.adventure.audience.MessageType
