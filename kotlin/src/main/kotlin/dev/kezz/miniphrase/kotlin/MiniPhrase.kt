@@ -24,8 +24,6 @@
 package dev.kezz.miniphrase.kotlin
 
 import dev.kezz.miniphrase.MiniPhraseContext
-import dev.kezz.miniphrase.kotlin.i18n.EmptyTranslationRegistry
-import dev.kezz.miniphrase.kotlin.i18n.TranslationRegistry
 import dev.kezz.miniphrase.kotlin.tag.GenericTagBuilder
 import dev.kezz.miniphrase.kotlin.tag.MiniPhraseTags
 import net.kyori.adventure.text.Component
@@ -33,16 +31,9 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import java.util.Locale
 
-/** The main entry-point for the MiniPhrase library. */
+
 public class MiniPhrase private constructor(
-  /** The MiniMessage instance. */
-  public val miniMessage: MiniMessage,
-  /** The translation registry. */
-  public val translationRegistry: TranslationRegistry,
-  /** The default locale for translations. */
-  public val defaultLocale: Locale,
-  /** If the phrase tag should be included by default. */
-  public val includePhraseTag: Boolean
+
 ) : MiniPhraseContext {
 
   public companion object {
@@ -56,7 +47,7 @@ public class MiniPhrase private constructor(
   }
 
   /** This MiniPhrase instance. */
-  override fun getMiniPhrase(): MiniPhrase = this
+  override fun getMiniPhrase(): dev.kezz.miniphrase.MiniPhrase = this
 
   /** Translates a key with a given locale, or the default locale. */
   public fun translate(

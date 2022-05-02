@@ -21,12 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dev.kezz.miniphrase.kotlin.i18n
+package dev.kezz.miniphrase.i18n;
 
-import java.util.Locale
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-/** A registry of translations. */
-public fun interface TranslationRegistry {
-  /** Returns a translation for a given [key] in a [locale]. */
-  public operator fun get(key: String, locale: Locale): String?
+import java.util.Locale;
+
+final class EmptyTranslationRegistry implements TranslationRegistry {
+  static EmptyTranslationRegistry INSTANCE = new EmptyTranslationRegistry();
+
+  private EmptyTranslationRegistry() {}
+
+  @Override
+  public @Nullable String get(final @NotNull String key, final @NotNull Locale locale) {
+    return null;
+  }
 }

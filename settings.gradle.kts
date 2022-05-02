@@ -2,7 +2,7 @@ rootProject.name = "miniphrase-parent"
 
 sequenceOf(
   "core",
-  "kotlin"
+  //"kotlin"
 ).forEach { projectName ->
   include("miniphrase-$projectName")
   project(":miniphrase-$projectName").projectDir = file(projectName)

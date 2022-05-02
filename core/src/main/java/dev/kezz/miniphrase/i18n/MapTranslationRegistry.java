@@ -21,23 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dev.kezz.miniphrase;
+package dev.kezz.miniphrase.i18n;
 
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-/**
- * An object with an associated MiniPhrase instance.
- *
- * @since 1.0.0
- */
-public interface MiniPhraseContext {
-  /**
-   * The MiniPhrase instance associated with this object.
-   *
-   * @since 1.0.0
-   */
-  @Contract(pure = true)
-  @NotNull
-  MiniPhrase getMiniPhrase();
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+
+record MapTranslationRegistry(Map<Locale, Map<String, String>> backingMap)
+    implements TranslationRegistry {
+  @Override
+  public @Nullable String get(final @NotNull String key, final @NotNull Locale locale) {
+    final var localeMap = backingMap.get(Objects.requireNonNull(locale, "locale must not be null"));
+    return localeMap == null ? null : localeMap.get(Objects.requireNonNull(key, "key must not be null"));
+  }
 }

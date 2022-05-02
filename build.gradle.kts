@@ -11,9 +11,11 @@ plugins {
   alias(libs.plugins.spotless)
 }
 
+val javaVersion: Int = 17
+
 java {
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(17))
+    languageVersion.set(JavaLanguageVersion.of(javaVersion))
   }
 }
 
@@ -37,6 +39,11 @@ subprojects {
   tasks {
     indra {
       mitLicense()
+
+      javaVersions {
+        minimumToolchain(javaVersion)
+        target(javaVersion)
+      }
 
       github("kezz", "miniphrase") {
         ci(true)

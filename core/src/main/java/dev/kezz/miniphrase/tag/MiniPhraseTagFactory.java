@@ -21,11 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dev.kezz.miniphrase.kotlin.i18n
+package dev.kezz.miniphrase.tag;
 
-import java.util.Locale
+import dev.kezz.miniphrase.MiniPhrase;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
-/** An empty translation registry. */
-public object EmptyTranslationRegistry : TranslationRegistry {
-  override fun get(key: String, locale: Locale): String? = null
+import java.util.Locale;
+
+/**
+ * Custom MiniMessage tags provided by MiniPhrase.
+ *
+ * @since 1.0.0
+ */
+@ApiStatus.NonExtendable
+public class MiniPhraseTagFactory {
+  private final MiniPhrase miniPhrase;
+
+  public MiniPhraseTagFactory(final @NotNull MiniPhrase miniPhrase) {
+
+  }
+
+  /**
+   * Returns an instance of the {@code <phrase:<key>:[locale]>} tag with a given default locale and
+   * MiniPhrase instance.
+   *
+   * @since 1.0.0
+   */
+  static @NotNull TagResolver phrase(
+      final @NotNull MiniPhrase miniPhrase, final @NotNull Locale locale) {
+    return new PhraseTag(miniPhrase, locale);
+  }
 }
