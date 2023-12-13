@@ -23,14 +23,14 @@
  */
 package dev.kezz.miniphrase.tag
 
-import dev.kezz.miniphrase.MiniPhraseContext
 import dev.kezz.miniphrase.MiniPhrase
+import dev.kezz.miniphrase.MiniPhraseContext
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.Context
 import net.kyori.adventure.text.minimessage.tag.Tag
 import net.kyori.adventure.text.minimessage.tag.resolver.ArgumentQueue
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import java.util.Locale
+import java.util.*
 
 /**
  * A wrapper around [TagResolver.Builder] with useful defaults, utility methods and
