@@ -52,13 +52,17 @@ public class MiniPhrase private constructor(
       Builder().apply(builder).build()
   }
 
+  init {
+    translationRegistry.reload()
+  }
+
   /** This MiniPhrase instance. */
   override val miniPhrase: MiniPhrase = this
 
   /** Translates a key with a given locale, or the default locale. */
   public fun translate(key: String, locale: Locale? = null, tags: (TagResolverBuilder.() -> Unit)? = null): Component {
     val targetLocale = locale ?: defaultLocale
-    val translationString = translationRegistry[key, targetLocale] ?: key
+    val translationString = translationRegistry[key, targetLocale.language] ?: key
     val resolver = TagResolverBuilder.configureAndBuild(this) {
       if (includePhraseTag) withPhraseTag(locale)
       if (tags != null) tags()

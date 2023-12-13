@@ -23,10 +23,8 @@
  */
 package dev.kezz.miniphrase.i18n
 
-import java.util.Locale
-
 /** An empty translation registry. */
 public object EmptyTranslationRegistry : TranslationRegistry {
-  override suspend fun reload() { }
-  override fun get(key: String, locale: Locale): String? = null
+  override fun reload() { }
+  override fun get(key: String, locale: String): String? = null
 }

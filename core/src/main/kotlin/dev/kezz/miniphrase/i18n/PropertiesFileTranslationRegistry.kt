@@ -25,6 +25,8 @@ package dev.kezz.miniphrase.i18n
 
 import java.io.File
 import java.io.FileInputStream
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import java.util.*
 
 /**
@@ -35,9 +37,32 @@ public class PropertiesFileTranslationRegistry(
   private val path: File,
 ) : MapBasedTranslationRegistry({
   buildMap {
-    Locale.getAvailableLocales().forEach {
-      val translationsFile = File(path, it.toLanguageTag() + ".properties")
+    if (path.exists() && !path.isDirectory) return@buildMap
 
+    if (!path.exists()) path.mkdirs()
+
+    Locale.getAvailableLocales().map { it.language }.distinct().forEach { languageKey ->
+      val translationsFile = File(path, "$languageKey.properties")
+
+      // If the file doesn't exist we check for the file in the resources and copy it
+      // if the file exists there.
+      if (!translationsFile.exists()) {
+        javaClass.getResourceAsStream("/$languageKey.properties")?.let {
+          try {
+            translationsFile.createNewFile()
+
+            Files.copy(
+              it,
+              translationsFile.getAbsoluteFile().toPath(),
+              StandardCopyOption.REPLACE_EXISTING
+            )
+          } catch (exception: Exception) {
+            exception.printStackTrace()
+          }
+        }
+      }
+
+      // If there is a file we read its contents.
       if (translationsFile.exists()) {
         val inputStream = FileInputStream(translationsFile)
 
@@ -46,7 +71,8 @@ public class PropertiesFileTranslationRegistry(
         properties.load(inputStream)
         inputStream.close()
 
-        put(it, properties.stringPropertyNames().associateWith { key -> properties.getProperty(key) })
+        put(languageKey,
+          properties.stringPropertyNames().associateWith { key -> properties.getProperty(key) })
       }
     }
   }

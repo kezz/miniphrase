@@ -120,7 +120,7 @@ public class TagResolverBuilder private constructor(
         }
       } ?: locale ?: miniPhrase.defaultLocale
 
-      val result = miniPhrase.translationRegistry[key, targetLocale]
+      val result = miniPhrase.translationRegistry[key, targetLocale.language]
 
       if (result == null) {
         Tag.inserting(Component.text(key))

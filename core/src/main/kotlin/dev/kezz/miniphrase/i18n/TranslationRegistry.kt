@@ -29,8 +29,8 @@ import java.util.Locale
 public interface TranslationRegistry {
 
   /** Loads or reloads all translations. */
-  public suspend fun reload()
+  public fun reload()
 
   /** Returns a translation for a given [key] in a [locale]. */
-  public operator fun get(key: String, locale: Locale): String?
+  public operator fun get(key: String, locale: String): String?
 }
