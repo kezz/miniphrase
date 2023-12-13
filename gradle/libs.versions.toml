@@ -1,9 +1,9 @@
 [versions]
 indra = "2.1.1"
-kotlin = "1.6.21"
+kotlin = "1.9.21"
 
 [libraries]
-adventure-minimessage = { group = "net.kyori", name = "adventure-text-minimessage", version = "4.10.1" }
+adventure-minimessage = { group = "net.kyori", name = "adventure-text-minimessage", version = "4.14.0" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 
 [plugins]

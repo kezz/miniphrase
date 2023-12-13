@@ -39,6 +39,14 @@ subprojects {
     compileOnly(rootProject.project.libs.kotlin.stdlib)
   }
 
+  kotlin {
+    jvmToolchain {
+      languageVersion.set(JavaLanguageVersion.of(17))
+    }
+
+    jvmToolchain(17)
+  }
+
   tasks {
     indra {
       mitLicense()
@@ -59,16 +67,6 @@ subprojects {
           }
         }
       }
-    }
-
-    java {
-      toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-      }
-    }
-
-    kotlin {
-      explicitApi()
     }
 
     ktlint {

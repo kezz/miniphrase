@@ -26,9 +26,8 @@ package dev.kezz.miniphrase.audience
 import dev.kezz.miniphrase.MiniPhraseContext
 import dev.kezz.miniphrase.tag.TagResolverBuilder
 import net.kyori.adventure.audience.Audience
-import net.kyori.adventure.audience.MessageType
 import net.kyori.adventure.identity.Identity
-import java.util.Locale
+import java.util.*
 
 /** Shorthand for [Audience.audience]. */
 public fun Array<out Audience>.asAudience(): Audience =
@@ -38,16 +37,15 @@ public fun Array<out Audience>.asAudience(): Audience =
 context(MiniPhraseContext)
 public fun Array<out Audience>.sendTranslated(
   key: String,
-  type: MessageType = MessageType.CHAT,
   identity: Identity = Identity.nil(),
   locale: Locale? = null,
   tags: (TagResolverBuilder.() -> Unit)? = null
 ) {
   if (locale != null) {
     // If we've got an override locale, we can save rendering by wrapping this in an audience.
-    asAudience().sendTranslated(key, type, identity, locale, tags)
+    asAudience().sendTranslated(key, identity, locale, tags)
   } else {
     // Otherwise, we need to pull it from each audience member, so just delegate.
-    forEach { audience -> audience.sendTranslated(key, type, identity, locale, tags) }
+    forEach { audience -> audience.sendTranslated(key, identity, locale, tags) }
   }
 }
