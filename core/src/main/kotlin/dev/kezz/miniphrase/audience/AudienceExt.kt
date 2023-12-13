@@ -50,7 +50,7 @@ public fun Audience.sendTranslated(
   /** The identity of the message sender. */
   identity: Identity = Identity.nil(),
   /** The locale to translate the message in, if not the default for the audience. */
-  locale: Locale? = null,
+  locale: String? = null,
   /* A builder of additional tags to use in the deserialization process. */
   tags: (TagResolverBuilder.() -> Unit)? = null
 ) {
@@ -68,7 +68,7 @@ public fun Audience.sendTranslated(
 
     else -> {
       // Try and get the locale from the audience, otherwise default, then translate and send!
-      val targetLocale = locale ?: get(Identity.LOCALE).orElseGet(miniPhrase::defaultLocale)
+      val targetLocale = locale ?: get(Identity.LOCALE).orElseGet(miniPhrase::defaultLocale).language
       sendMessage(miniPhrase.translate(key, targetLocale, tags))
     }
   }

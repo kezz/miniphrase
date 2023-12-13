@@ -38,7 +38,7 @@ context(MiniPhraseContext)
 public fun Array<out Audience>.sendTranslated(
   key: String,
   identity: Identity = Identity.nil(),
-  locale: Locale? = null,
+  locale: String? = null,
   tags: (TagResolverBuilder.() -> Unit)? = null
 ) {
   if (locale != null) {

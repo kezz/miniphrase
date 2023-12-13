@@ -60,9 +60,9 @@ public class MiniPhrase private constructor(
   override val miniPhrase: MiniPhrase = this
 
   /** Translates a key with a given locale, or the default locale. */
-  public fun translate(key: String, locale: Locale? = null, tags: (TagResolverBuilder.() -> Unit)? = null): Component {
-    val targetLocale = locale ?: defaultLocale
-    val translationString = translationRegistry[key, targetLocale.language] ?: key
+  public fun translate(key: String, locale: String? = null, tags: (TagResolverBuilder.() -> Unit)? = null): Component {
+    val targetLocale = locale ?: defaultLocale.language
+    val translationString = translationRegistry[key, targetLocale] ?: key
     val resolver = TagResolverBuilder.configureAndBuild(this) {
       if (includePhraseTag) withPhraseTag(locale)
       if (tags != null) tags()
