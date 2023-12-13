@@ -38,11 +38,13 @@ public class PropertiesFileTranslationRegistry(
     Locale.getAvailableLocales().forEach {
       val translationsFile = File(path, it.toLanguageTag() + ".properties")
 
-      val inputStream = FileInputStream(translationsFile)
-
       if (translationsFile.exists()) {
+        val inputStream = FileInputStream(translationsFile)
+
         val properties = Properties()
+
         properties.load(inputStream)
+        inputStream.close()
 
         put(it, properties.stringPropertyNames().associateWith { key -> properties.getProperty(key) })
       }
