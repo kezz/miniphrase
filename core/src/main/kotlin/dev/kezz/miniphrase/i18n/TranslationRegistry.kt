@@ -23,8 +23,6 @@
  */
 package dev.kezz.miniphrase.i18n
 
-import java.util.Locale
-
 /** A registry of translations. */
 public interface TranslationRegistry {
 

@@ -45,6 +45,7 @@ subprojects {
     }
 
     jvmToolchain(17)
+    explicitApi()
   }
 
   tasks {

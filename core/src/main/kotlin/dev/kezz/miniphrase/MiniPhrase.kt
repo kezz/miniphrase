@@ -60,7 +60,7 @@ public class MiniPhrase private constructor(
   override val miniPhrase: MiniPhrase = this
 
   /** Formats a string and applies styles and tags. */
-  private fun format(text: String, locale: String? = null, tags: (TagResolverBuilder.() -> Unit)? = null): Component {
+  public fun format(text: String, locale: String? = null, tags: (TagResolverBuilder.() -> Unit)? = null): Component {
     val resolver = TagResolverBuilder.configureAndBuild(this) {
       if (includePhraseTag) withPhraseTag(locale)
       if (tags != null) tags()
