@@ -31,4 +31,10 @@ public interface TranslationRegistry {
 
   /** Returns a translation for a given [key] in a [locale]. */
   public operator fun get(key: String, locale: String): String?
+
+  /** Returns a translation list for a given [key] in a [locale]. */
+  public fun getTranslationList(key: String, locale: String): List<String>
+
+  /** Returns the list of registered locales. */
+  public fun getLocales(): Set<String>
 }

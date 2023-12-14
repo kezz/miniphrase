@@ -83,9 +83,7 @@ public class MiniPhrase private constructor(
     tags: (TagResolverBuilder.() -> Unit)? = null
   ): List<Component> {
     val targetLocale = locale ?: defaultLocale.language
-    val translationString = translationRegistry[key, targetLocale] ?: key
-
-    val lines = translationString.split("\n")
+    val lines = translationRegistry.getTranslationList(key, targetLocale)
 
     return lines.map { format(it, locale, tags) }
   }

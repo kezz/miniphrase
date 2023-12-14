@@ -25,6 +25,10 @@ package dev.kezz.miniphrase.i18n
 
 /** An empty translation registry. */
 public object EmptyTranslationRegistry : TranslationRegistry {
+
   override fun reload() { }
   override fun get(key: String, locale: String): String? = null
+
+  override fun getTranslationList(key: String, locale: String): List<String> = listOf()
+  override fun getLocales(): Set<String> = setOf()
 }
