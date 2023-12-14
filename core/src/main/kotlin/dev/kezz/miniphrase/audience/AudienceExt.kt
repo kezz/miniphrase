@@ -27,9 +27,8 @@ import dev.kezz.miniphrase.MiniPhraseContext
 import dev.kezz.miniphrase.tag.TagResolverBuilder
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.audience.ForwardingAudience
-import net.kyori.adventure.chat.ChatType
 import net.kyori.adventure.identity.Identity
-import java.util.*
+import java.util.Locale
 
 /**
  * Sends a message to this audience, with optional additional tags.
@@ -50,8 +49,8 @@ public fun Audience.sendTranslated(
   key: String,
   /** The locale to translate the message in, if not the default for the audience. */
   locale: Locale? = null,
-  /* A builder of additional tags to use in the deserialization process. */
-  tags: (TagResolverBuilder.() -> Unit)? = null
+  // A builder of additional tags to use in the deserialization process.
+  tags: (TagResolverBuilder.() -> Unit)? = null,
 ) {
   when {
     this == Audience.empty() -> {

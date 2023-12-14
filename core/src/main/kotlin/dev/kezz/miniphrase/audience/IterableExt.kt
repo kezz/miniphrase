@@ -26,18 +26,17 @@ package dev.kezz.miniphrase.audience
 import dev.kezz.miniphrase.MiniPhraseContext
 import dev.kezz.miniphrase.tag.TagResolverBuilder
 import net.kyori.adventure.audience.Audience
-import java.util.*
+import java.util.Locale
 
 /** Shorthand for [Audience.audience]. */
-public fun Iterable<Audience>.asAudience(): Audience =
-  Audience.audience(this)
+public fun Iterable<Audience>.asAudience(): Audience = Audience.audience(this)
 
 /** @see [Audience.sendTranslated] */
 context(MiniPhraseContext)
 public fun Iterable<Audience>.sendTranslated(
   key: String,
   locale: Locale? = null,
-  tags: (TagResolverBuilder.() -> Unit)? = null
+  tags: (TagResolverBuilder.() -> Unit)? = null,
 ) {
   if (locale != null) {
     // If we've got an override locale, we can save rendering by wrapping this in an audience.

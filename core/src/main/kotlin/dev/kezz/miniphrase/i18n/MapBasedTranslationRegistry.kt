@@ -23,21 +23,23 @@
  */
 package dev.kezz.miniphrase.i18n
 
-import java.util.*
+import java.util.Locale
 
 /** A translation registry that is backed by a map populated by a supplier. */
 public open class MapBasedTranslationRegistry(
   /** The supplier of content for the map, used in reloads. */
-  private val supplier: () -> Map<Locale, Map<String, String>>
+  private val supplier: () -> Map<Locale, Map<String, String>>,
 ) : TranslationRegistry {
-
   private var map: Map<Locale, Map<String, String>> = mapOf()
 
   override fun reload() {
     map = supplier()
   }
 
-  override fun get(key: String, locale: Locale): String? = map[locale]?.get(key)
+  override fun get(
+    key: String,
+    locale: Locale,
+  ): String? = map[locale]?.get(key)
 
   override fun getLocales(): Set<Locale> = map.keys
 }

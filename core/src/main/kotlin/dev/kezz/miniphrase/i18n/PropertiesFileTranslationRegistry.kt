@@ -27,7 +27,8 @@ import java.io.File
 import java.io.FileInputStream
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
-import java.util.*
+import java.util.Locale
+import java.util.Properties
 
 /**
  * A translation registry that is populated by looking for property files in [path].
@@ -37,38 +38,38 @@ import java.util.*
  */
 public class PropertiesFileTranslationRegistry(
   private val path: File,
-  private val fetchFromResources: Boolean = true
+  private val fetchFromResources: Boolean = true,
 ) : MapBasedTranslationRegistry({
-  buildMap {
-    val exists = path.exists()
+    buildMap {
+      val exists = path.exists()
 
-    if (exists && !path.isDirectory) return@buildMap
-    if (!exists) path.mkdirs()
+      if (exists && !path.isDirectory) return@buildMap
+      if (!exists) path.mkdirs()
 
-    Locale.getAvailableLocales().forEach { language ->
-      val languageKey = language.toLanguageTag()
-      val translationsFile = File(path, "$languageKey.properties")
+      Locale.getAvailableLocales().forEach { language ->
+        val languageKey = language.toLanguageTag()
+        val translationsFile = File(path, "$languageKey.properties")
 
-      // If the file doesn't exist we check for the file in the resources and copy it
-      // if the file exists there.
-      if (!translationsFile.exists() && fetchFromResources) {
-        val resourceStream = javaClass.getResourceAsStream("/$languageKey.properties") ?: return@forEach
+        // If the file doesn't exist we check for the file in the resources and copy it
+        // if the file exists there.
+        if (!translationsFile.exists() && fetchFromResources) {
+          val resourceStream = javaClass.getResourceAsStream("/$languageKey.properties") ?: return@forEach
 
-        translationsFile.createNewFile()
-        Files.copy(resourceStream, translationsFile.getAbsoluteFile().toPath(), StandardCopyOption.REPLACE_EXISTING)
-      }
+          translationsFile.createNewFile()
+          Files.copy(resourceStream, translationsFile.getAbsoluteFile().toPath(), StandardCopyOption.REPLACE_EXISTING)
+        }
 
-      // If there is a file we read its contents and save it into the map.
-      if (translationsFile.exists()) {
-        val inputStream = FileInputStream(translationsFile)
+        // If there is a file we read its contents and save it into the map.
+        if (translationsFile.exists()) {
+          val inputStream = FileInputStream(translationsFile)
 
-        val properties = Properties()
+          val properties = Properties()
 
-        properties.load(inputStream)
-        inputStream.close()
+          properties.load(inputStream)
+          inputStream.close()
 
-        put(language, properties.stringPropertyNames().associateWith { key -> properties.getProperty(key) })
+          put(language, properties.stringPropertyNames().associateWith { key -> properties.getProperty(key) })
+        }
       }
     }
-  }
-})
+  })
