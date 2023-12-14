@@ -59,15 +59,35 @@ public class MiniPhrase private constructor(
   /** This MiniPhrase instance. */
   override val miniPhrase: MiniPhrase = this
 
-  /** Translates a key with a given locale, or the default locale. */
-  public fun translate(key: String, locale: String? = null, tags: (TagResolverBuilder.() -> Unit)? = null): Component {
-    val targetLocale = locale ?: defaultLocale.language
-    val translationString = translationRegistry[key, targetLocale] ?: key
+  /** Formats a string and applies styles and tags. */
+  private fun format(text: String, locale: String? = null, tags: (TagResolverBuilder.() -> Unit)? = null): Component {
     val resolver = TagResolverBuilder.configureAndBuild(this) {
       if (includePhraseTag) withPhraseTag(locale)
       if (tags != null) tags()
     }
-    return miniMessage.deserialize(translationString, resolver)
+    return miniMessage.deserialize(text, resolver)
+  }
+
+  /** Translates a key with a given locale, or the default locale. */
+  public fun translate(key: String, locale: String? = null, tags: (TagResolverBuilder.() -> Unit)? = null): Component {
+    val targetLocale = locale ?: defaultLocale.language
+    val translationString = translationRegistry[key, targetLocale] ?: key
+
+    return format(translationString, locale, tags)
+  }
+
+  /** Translates a key with a given locale, or the default locale into multiple lines. */
+  public fun translateList(
+    key: String,
+    locale: String? = null,
+    tags: (TagResolverBuilder.() -> Unit)? = null
+  ): List<Component> {
+    val targetLocale = locale ?: defaultLocale.language
+    val translationString = translationRegistry[key, targetLocale] ?: key
+
+    val lines = translationString.split("\n")
+
+    return lines.map { format(it, locale, tags) }
   }
 
   /** Builder class for MiniPhrase instances. */
