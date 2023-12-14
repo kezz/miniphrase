@@ -23,6 +23,8 @@
  */
 package dev.kezz.miniphrase.i18n
 
+import java.util.*
+
 /** A registry of translations. */
 public interface TranslationRegistry {
 
@@ -30,11 +32,14 @@ public interface TranslationRegistry {
   public fun reload()
 
   /** Returns a translation for a given [key] in a [locale]. */
-  public operator fun get(key: String, locale: String): String?
+  public operator fun get(key: String, locale: Locale): String?
 
-  /** Returns a translation list for a given [key] in a [locale]. */
-  public fun getTranslationList(key: String, locale: String): List<String>
+  /**
+   * Returns a translation list for a given [key] in a [locale].
+   * List members are split with "\n" inside a translation.
+   */
+  public fun getList(key: String, locale: Locale): List<String> = get(key, locale)?.split("\n") ?: listOf(key)
 
   /** Returns the list of registered locales. */
-  public fun getLocales(): Set<String>
+  public fun getLocales(): Set<Locale>
 }

@@ -31,38 +31,34 @@ import java.util.*
 
 /**
  * A translation registry that is populated by looking for property files in [path].
- * Format: en.properties
+ * If [fetchFromResources], it will look for any language files in the resources directory.
+ *
+ * Format: en_us.properties
  */
 public class PropertiesFileTranslationRegistry(
   private val path: File,
+  private val fetchFromResources: Boolean = true
 ) : MapBasedTranslationRegistry({
   buildMap {
-    if (path.exists() && !path.isDirectory) return@buildMap
+    val exists = path.exists()
 
-    if (!path.exists()) path.mkdirs()
+    if (exists && !path.isDirectory) return@buildMap
+    if (!exists) path.mkdirs()
 
-    Locale.getAvailableLocales().map { it.language }.distinct().forEach { languageKey ->
+    Locale.getAvailableLocales().forEach { language ->
+      val languageKey = language.toLanguageTag()
       val translationsFile = File(path, "$languageKey.properties")
 
       // If the file doesn't exist we check for the file in the resources and copy it
       // if the file exists there.
-      if (!translationsFile.exists()) {
-        javaClass.getResourceAsStream("/$languageKey.properties")?.let {
-          try {
-            translationsFile.createNewFile()
+      if (!translationsFile.exists() && fetchFromResources) {
+        val resourceStream = javaClass.getResourceAsStream("/$languageKey.properties") ?: return@forEach
 
-            Files.copy(
-              it,
-              translationsFile.getAbsoluteFile().toPath(),
-              StandardCopyOption.REPLACE_EXISTING
-            )
-          } catch (exception: Exception) {
-            exception.printStackTrace()
-          }
-        }
+        translationsFile.createNewFile()
+        Files.copy(resourceStream, translationsFile.getAbsoluteFile().toPath(), StandardCopyOption.REPLACE_EXISTING)
       }
 
-      // If there is a file we read its contents.
+      // If there is a file we read its contents and save it into the map.
       if (translationsFile.exists()) {
         val inputStream = FileInputStream(translationsFile)
 
@@ -71,8 +67,7 @@ public class PropertiesFileTranslationRegistry(
         properties.load(inputStream)
         inputStream.close()
 
-        put(languageKey,
-          properties.stringPropertyNames().associateWith { key -> properties.getProperty(key) })
+        put(language, properties.stringPropertyNames().associateWith { key -> properties.getProperty(key) })
       }
     }
   }

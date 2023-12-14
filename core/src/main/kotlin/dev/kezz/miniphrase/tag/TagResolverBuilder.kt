@@ -111,14 +111,14 @@ public class TagResolverBuilder private constructor(
   }
 
   /** Adds the phrase tag resolver to this builder, optionally with an overridden default locale. */
-  public fun withPhraseTag(locale: String? = null) {
+  public fun withPhraseTag(locale: Locale? = null) {
     tag(PHRASE_TAG_NAME) { arguments, ctx ->
       val key = arguments.popOr("No key provided.").lowerValue()
       val targetLocale = arguments.peek()?.let { arg ->
         runCatching { Locale.forLanguageTag(arg.lowerValue()) }.getOrElse { exception ->
           throw ctx.newException("Invalid language tag $arg.", exception, arguments)
         }
-      }?.language ?: locale ?: miniPhrase.defaultLocale.language
+      } ?: locale ?: miniPhrase.defaultLocale
 
       val result = miniPhrase.translationRegistry[key, targetLocale]
 
