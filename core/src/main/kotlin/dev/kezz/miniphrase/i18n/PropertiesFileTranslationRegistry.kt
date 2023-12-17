@@ -54,7 +54,7 @@ public class PropertiesFileTranslationRegistry(
         // If the file doesn't exist we check for the file in the resources and copy it
         // if the file exists there.
         if (!translationsFile.exists() && fetchFromResources) {
-          val resourceStream = javaClass.getResourceAsStream("$resourcesPrefix$languageKey.properties") ?: return@forEach
+          val resourceStream = javaClass.getResourceAsStream("/$resourcesPrefix$languageKey.properties") ?: return@forEach
 
           translationsFile.createNewFile()
           Files.copy(resourceStream, translationsFile.getAbsoluteFile().toPath(), StandardCopyOption.REPLACE_EXISTING)
