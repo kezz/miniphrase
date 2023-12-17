@@ -60,7 +60,7 @@ public class MiniPhrase private constructor(
   /** Formats a string and applies styles and tags. */
   public fun format(
     text: String,
-    locale: Locale? = null,
+    locale: Locale? = defaultLocale,
     tags: (TagResolverBuilder.() -> Unit)? = null,
   ): Component {
     val resolver =
@@ -78,9 +78,9 @@ public class MiniPhrase private constructor(
     tags: (TagResolverBuilder.() -> Unit)? = null,
   ): Component {
     val targetLocale = locale ?: defaultLocale
-    val translationString = translationRegistry[key, targetLocale] ?: key
+    val translationString = translationRegistry[key, targetLocale] ?: translationRegistry[key, defaultLocale] ?: key
 
-    return format(translationString, locale, tags)
+    return format(translationString, locale ?: defaultLocale, tags)
   }
 
   /** Translates a key with a given locale, or the default locale into multiple lines. */
@@ -90,9 +90,10 @@ public class MiniPhrase private constructor(
     tags: (TagResolverBuilder.() -> Unit)? = null,
   ): List<Component> {
     val targetLocale = locale ?: defaultLocale
-    val lines = translationRegistry.getList(key, targetLocale)
+    val lines =
+      translationRegistry.getList(key, targetLocale) ?: translationRegistry.getList(key, defaultLocale) ?: listOf(key)
 
-    return lines.map { format(it, locale, tags) }
+    return lines.map { format(it, locale ?: defaultLocale, tags) }
   }
 
   /** Builder class for MiniPhrase instances. */

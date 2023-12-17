@@ -43,7 +43,7 @@ public interface TranslationRegistry {
   public fun getList(
     key: String,
     locale: Locale,
-  ): List<String> = get(key, locale)?.split("\n") ?: listOf(key)
+  ): List<String>? = get(key, locale)?.split("\n")
 
   /** Returns the list of registered locales. */
   public fun getLocales(): Set<Locale>
