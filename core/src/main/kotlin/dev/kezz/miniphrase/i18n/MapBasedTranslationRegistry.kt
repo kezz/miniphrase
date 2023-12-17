@@ -39,7 +39,7 @@ public open class MapBasedTranslationRegistry(
   override fun get(
     key: String,
     locale: Locale,
-  ): String? = map[locale]?.get(key)
+  ): String? = map[locale]?.get(key) ?: map[Locale.US]?.get(key)
 
   override fun getLocales(): Set<Locale> = map.keys
 }
