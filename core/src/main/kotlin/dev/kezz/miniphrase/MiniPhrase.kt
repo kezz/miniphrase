@@ -33,7 +33,7 @@ import java.util.Locale
 /** The main entry-point for the MiniPhrase library. */
 public class MiniPhrase private constructor(
   /** The MiniMessage instance. */
-  public val miniMessage: MiniMessage,
+  public var miniMessage: MiniMessage,
   /** The translation registry. */
   public val translationRegistry: TranslationRegistry,
   /** The default locale for translations. */

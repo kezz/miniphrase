@@ -25,6 +25,8 @@ package dev.kezz.miniphrase.i18n
 
 import java.io.File
 import java.io.FileInputStream
+import java.io.InputStreamReader
+import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.util.Locale
@@ -66,7 +68,7 @@ public class PropertiesFileTranslationRegistry(
 
           val properties = Properties()
 
-          properties.load(inputStream)
+          properties.load(InputStreamReader(inputStream, Charset.forName("UTF-8")))
           inputStream.close()
 
           put(language, properties.stringPropertyNames().associateWith { key -> properties.getProperty(key) })
