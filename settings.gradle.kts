@@ -8,7 +8,7 @@ dependencyResolutionManagement {
 rootProject.name = "miniphrase-parent"
 
 sequenceOf(
-  "core"
+  "core",
 ).forEach { projectName ->
   include("miniphrase-$projectName")
   project(":miniphrase-$projectName").projectDir = file(projectName)
