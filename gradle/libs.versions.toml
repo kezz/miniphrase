@@ -3,7 +3,7 @@ indra = "2.1.1"
 kotlin = "1.6.21"
 
 [libraries]
-adventure-minimessage = { group = "net.kyori", name = "adventure-text-minimessage", version = "4.10.1" }
+adventure-minimessage = { group = "net.kyori", name = "adventure-text-minimessage", version = "4.17.0" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 
 [plugins]
