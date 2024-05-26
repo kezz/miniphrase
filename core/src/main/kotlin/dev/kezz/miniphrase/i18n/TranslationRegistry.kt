@@ -27,10 +27,24 @@ import java.util.Locale
 
 /** A registry of translations. */
 public interface TranslationRegistry {
-
   /** Loads or reloads all translations. */
-  public suspend fun reload()
+  public fun reload()
 
   /** Returns a translation for a given [key] in a [locale]. */
-  public operator fun get(key: String, locale: Locale): String?
+  public operator fun get(
+    key: String,
+    locale: Locale,
+  ): String?
+
+  /**
+   * Returns a translation list for a given [key] in a [locale].
+   * List members are split with "\n" inside a translation.
+   */
+  public fun getList(
+    key: String,
+    locale: Locale,
+  ): List<String>? = get(key, locale)?.split("\n")
+
+  /** Returns the list of registered locales. */
+  public fun getLocales(): Set<Locale>
 }

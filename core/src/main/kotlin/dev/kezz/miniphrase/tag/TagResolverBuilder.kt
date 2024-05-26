@@ -23,8 +23,8 @@
  */
 package dev.kezz.miniphrase.tag
 
-import dev.kezz.miniphrase.MiniPhraseContext
 import dev.kezz.miniphrase.MiniPhrase
+import dev.kezz.miniphrase.MiniPhraseContext
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.Context
 import net.kyori.adventure.text.minimessage.tag.Tag
@@ -37,71 +37,102 @@ import java.util.Locale
  * helper functions for MiniPhrase-specific elements.
  */
 public class TagResolverBuilder private constructor(
-  override val miniPhrase: MiniPhrase
+  override val miniPhrase: MiniPhrase,
 ) : MiniPhraseContext {
-
   public companion object {
     private const val PHRASE_TAG_NAME: String = "phrase"
 
     /** Configures and builds a tag resolver using the provided builder and MiniPhrase instance. */
-    public fun configureAndBuild(miniPhrase: MiniPhrase, builder: TagResolverBuilder.() -> Unit): TagResolver =
-      TagResolverBuilder(miniPhrase).apply(builder).build()
+    public fun configureAndBuild(
+      miniPhrase: MiniPhrase,
+      builder: TagResolverBuilder.() -> Unit,
+    ): TagResolver = TagResolverBuilder(miniPhrase).apply(builder).build()
   }
 
   private val builder: TagResolver.Builder = TagResolver.builder()
 
   /** Adds a parsed placeholder to this builder. */
-  public fun parsed(key: String, value: Any?) {
+  public fun parsed(
+    key: String,
+    value: Any?,
+  ) {
     parsed(key, value.toString())
   }
 
   /** Adds a parsed placeholder to this builder. */
-  public fun parsed(key: String, value: String) {
+  public fun parsed(
+    key: String,
+    value: String,
+  ) {
     tag(key, Tag.preProcessParsed(value))
   }
 
   /** Adds a parsed placeholder to this builder. The value is lazily computed. */
-  public fun parsed(key: String, value: () -> String) {
+  public fun parsed(
+    key: String,
+    value: () -> String,
+  ) {
     tag(key) { _, _ ->
       Tag.preProcessParsed(value())
     }
   }
 
   /** Adds an unparsed placeholder to this builder. */
-  public fun unparsed(key: String, value: Any?) {
+  public fun unparsed(
+    key: String,
+    value: Any?,
+  ) {
     unparsed(key, value.toString())
   }
 
   /** Adds an unparsed placeholder to this builder. */
-  public fun unparsed(key: String, value: String) {
+  public fun unparsed(
+    key: String,
+    value: String,
+  ) {
     tag(key, Tag.inserting(Component.text(value)))
   }
 
   /** Adds an unparsed placeholder to this builder. The value is lazily computed. */
   @JvmName("unparsedAny")
-  public fun unparsed(key: String, value: () -> Any?) {
+  public fun unparsed(
+    key: String,
+    value: () -> Any?,
+  ) {
     unparsed(key) { value().toString() }
   }
 
   /** Adds an unparsed placeholder to this builder. The value is lazily computed. */
-  public fun unparsed(key: String, value: () -> String) {
+  public fun unparsed(
+    key: String,
+    value: () -> String,
+  ) {
     tag(key) { _, _ ->
       Tag.inserting(Component.text(value()))
     }
   }
 
   /** Adds a tag that inserts a component. */
-  public fun inserting(key: String, value: Component) {
+  public fun inserting(
+    key: String,
+    value: Component,
+  ) {
     tag(key, Tag.inserting(value))
   }
 
   /** Adds a tag to this builder. */
-  public fun tag(key: String, tag: Tag) {
+  public fun tag(
+    key: String,
+    tag: Tag,
+  ) {
     builder.tag(key, tag)
   }
 
   /** Constructs a tag and adds it to this builder. */
-  public fun tag(key: String, tag: (arguments: ArgumentQueue, ctx: Context) -> Tag) {
+  public fun tag(
+    key: String,
+    tag: (arguments: ArgumentQueue, ctx: Context) -> Tag,
+  ) {
     builder.tag(key, tag)
   }
 
@@ -114,11 +145,12 @@ public class TagResolverBuilder private constructor(
   public fun withPhraseTag(locale: Locale? = null) {
     tag(PHRASE_TAG_NAME) { arguments, ctx ->
       val key = arguments.popOr("No key provided.").lowerValue()
-      val targetLocale = arguments.peek()?.let { arg ->
-        runCatching { Locale.forLanguageTag(arg.lowerValue()) }.getOrElse { exception ->
-          throw ctx.newException("Invalid language tag $arg.", exception, arguments)
-        }
-      } ?: locale ?: miniPhrase.defaultLocale
+      val targetLocale =
+        arguments.peek()?.let { arg ->
+          runCatching { Locale.forLanguageTag(arg.lowerValue()) }.getOrElse { exception ->
+            throw ctx.newException("Invalid language tag $arg.", exception, arguments)
+          }
+        } ?: locale ?: miniPhrase.defaultLocale
 
       val result = miniPhrase.translationRegistry[key, targetLocale]
 
@@ -131,6 +163,5 @@ public class TagResolverBuilder private constructor(
   }
 
   /** Creates a tag resolver from this builder. */
-  public fun build(): TagResolver =
-    builder.build()
+  public fun build(): TagResolver = builder.build()
 }

@@ -33,37 +33,79 @@ import java.util.Locale
 /** The main entry-point for the MiniPhrase library. */
 public class MiniPhrase private constructor(
   /** The MiniMessage instance. */
-  public val miniMessage: MiniMessage,
+  public var miniMessage: MiniMessage,
   /** The translation registry. */
   public val translationRegistry: TranslationRegistry,
   /** The default locale for translations. */
   public val defaultLocale: Locale,
   /** If the phrase tag should be included by default. */
-  public val includePhraseTag: Boolean
+  public val includePhraseTag: Boolean,
 ) : MiniPhraseContext {
-
   public companion object {
     /** Creates a simple MiniPhrase instance from a given translation registry. */
     public fun fromTranslationRegistry(translationRegistry: TranslationRegistry): MiniPhrase =
       configureAndBuild { translationRegistry(translationRegistry) }
 
     /** Configures and builds a MiniPhrase instance using the provided [builder]. */
-    public fun configureAndBuild(builder: Builder.() -> Unit): MiniPhrase =
-      Builder().apply(builder).build()
+    public fun configureAndBuild(builder: Builder.() -> Unit): MiniPhrase = Builder().apply(builder).build()
+  }
+
+  init {
+    translationRegistry.reload()
   }
 
   /** This MiniPhrase instance. */
   override val miniPhrase: MiniPhrase = this
 
+  /** Formats a string and applies styles and tags. */
+  public fun format(
+    text: String,
+    locale: Locale? = defaultLocale,
+    tags: (TagResolverBuilder.() -> Unit)? = null,
+  ): Component {
+    val resolver =
+      TagResolverBuilder.configureAndBuild(this) {
+        if (includePhraseTag) withPhraseTag(locale)
+        if (tags != null) tags()
+      }
+    return miniMessage.deserialize(text, resolver)
+  }
+
   /** Translates a key with a given locale, or the default locale. */
-  public fun translate(key: String, locale: Locale? = null, tags: (TagResolverBuilder.() -> Unit)? = null): Component {
+  public fun translateOrNull(
+    key: String,
+    locale: Locale? = null,
+    tags: (TagResolverBuilder.() -> Unit)? = null,
+  ): Component? {
     val targetLocale = locale ?: defaultLocale
-    val translationString = translationRegistry[key, targetLocale] ?: key
-    val resolver = TagResolverBuilder.configureAndBuild(this) {
-      if (includePhraseTag) withPhraseTag(locale)
-      if (tags != null) tags()
-    }
-    return miniMessage.deserialize(translationString, resolver)
+    val translationString = translationRegistry[key, targetLocale] ?: translationRegistry[key, defaultLocale]
+
+    return translationString?.let { format(it, locale ?: defaultLocale, tags) }
+  }
+
+  /** Translates a key with a given locale, or the default locale. */
+  public fun translate(
+    key: String,
+    locale: Locale? = null,
+    tags: (TagResolverBuilder.() -> Unit)? = null,
+  ): Component {
+    val targetLocale = locale ?: defaultLocale
+    val translationString = translationRegistry[key, targetLocale] ?: translationRegistry[key, defaultLocale] ?: key
+
+    return format(translationString, locale ?: defaultLocale, tags)
+  }
+
+  /** Translates a key with a given locale, or the default locale into multiple lines. */
+  public fun translateList(
+    key: String,
+    locale: Locale? = null,
+    tags: (TagResolverBuilder.() -> Unit)? = null,
+  ): List<Component> {
+    val targetLocale = locale ?: defaultLocale
+    val lines =
+      translationRegistry.getList(key, targetLocale) ?: translationRegistry.getList(key, defaultLocale) ?: listOf(key)
+
+    return lines.map { format(it, locale ?: defaultLocale, tags) }
   }
 
   /** Builder class for MiniPhrase instances. */
@@ -104,7 +146,6 @@ public class MiniPhrase private constructor(
     }
 
     /** Creates a MiniPhrase instance from this builder. */
-    public fun build(): MiniPhrase =
-      MiniPhrase(miniMessage, translationRegistry, defaultLocale, includePhraseTag)
+    public fun build(): MiniPhrase = MiniPhrase(miniMessage, translationRegistry, defaultLocale, includePhraseTag)
   }
 }
