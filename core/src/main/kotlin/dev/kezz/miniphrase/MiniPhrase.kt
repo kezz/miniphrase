@@ -72,6 +72,18 @@ public class MiniPhrase private constructor(
   }
 
   /** Translates a key with a given locale, or the default locale. */
+  public fun translateOrNull(
+    key: String,
+    locale: Locale? = null,
+    tags: (TagResolverBuilder.() -> Unit)? = null,
+  ): Component? {
+    val targetLocale = locale ?: defaultLocale
+    val translationString = translationRegistry[key, targetLocale] ?: translationRegistry[key, defaultLocale]
+
+    return translationString?.let { format(it, locale ?: defaultLocale, tags) }
+  }
+
+  /** Translates a key with a given locale, or the default locale. */
   public fun translate(
     key: String,
     locale: Locale? = null,
