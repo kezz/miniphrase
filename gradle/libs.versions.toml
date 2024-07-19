@@ -1,6 +1,6 @@
 [versions]
 indra = "2.1.1"
-kotlin = "1.6.21"
+kotlin = "1.9.25"
 
 [libraries]
 adventure-minimessage = { group = "net.kyori", name = "adventure-text-minimessage", version = "4.10.1" }
