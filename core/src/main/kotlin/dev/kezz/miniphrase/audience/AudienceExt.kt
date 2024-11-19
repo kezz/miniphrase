@@ -27,7 +27,6 @@ import dev.kezz.miniphrase.MiniPhraseContext
 import dev.kezz.miniphrase.tag.TagResolverBuilder
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.audience.ForwardingAudience
-import net.kyori.adventure.audience.MessageType
 import net.kyori.adventure.identity.Identity
 import java.util.Locale
 
@@ -48,14 +47,10 @@ context(MiniPhraseContext)
 public fun Audience.sendTranslated(
   /** The key of the message. */
   key: String,
-  /** The type of the message. */
-  type: MessageType = MessageType.CHAT,
-  /** The identity of the message sender. */
-  identity: Identity = Identity.nil(),
   /** The locale to translate the message in, if not the default for the audience. */
   locale: Locale? = null,
-  /* A builder of additional tags to use in the deserialization process. */
-  tags: (TagResolverBuilder.() -> Unit)? = null
+  // A builder of additional tags to use in the deserialization process.
+  tags: (TagResolverBuilder.() -> Unit)? = null,
 ) {
   when {
     this == Audience.empty() -> {
@@ -64,15 +59,40 @@ public fun Audience.sendTranslated(
 
     locale == null && this is ForwardingAudience -> {
       // We only run through each child if the locale is null (i.e. we're pulling it from the audience itself).
-      forEachAudience { child ->
-        child.sendTranslated(key, type, identity, locale, tags)
-      }
+      forEachAudience { child -> child.sendTranslated(key, locale, tags) }
     }
 
     else -> {
       // Try and get the locale from the audience, otherwise default, then translate and send!
       val targetLocale = locale ?: get(Identity.LOCALE).orElseGet(miniPhrase::defaultLocale)
-      sendMessage(identity, miniPhrase.translate(key, targetLocale, tags), type)
+      sendMessage(miniPhrase.translate(key, targetLocale, tags))
+    }
+  }
+}
+
+context(MiniPhraseContext)
+public fun Audience.sendTranslatedIfPresent(
+  /** The key of the message. */
+  key: String,
+  /** The locale to translate the message in, if not the default for the audience. */
+  locale: Locale? = null,
+  // A builder of additional tags to use in the deserialization process.
+  tags: (TagResolverBuilder.() -> Unit)? = null,
+) {
+  when {
+    this == Audience.empty() -> {
+      // Do nothing if this audience is the empty audience.
+    }
+
+    locale == null && this is ForwardingAudience -> {
+      // We only run through each child if the locale is null (i.e. we're pulling it from the audience itself).
+      forEachAudience { child -> child.sendTranslated(key, locale, tags) }
+    }
+
+    else -> {
+      // Try and get the locale from the audience, otherwise default, then translate and send!
+      val targetLocale = locale ?: get(Identity.LOCALE).orElseGet(miniPhrase::defaultLocale)
+      miniPhrase.translateOrNull(key, targetLocale, tags)?.let { sendMessage(it) }
     }
   }
 }
